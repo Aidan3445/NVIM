@@ -59,20 +59,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		})
 	end,
 })
-
-local lspconfig = require('lspconfig')
-
-lspconfig.sourcekit = {
-	default_config = {
-		cmd = {
-			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"
-		},
-		filetypes = { "swift", "objective-c", "objective-cpp" },
-		root_dir = lspconfig.util.root_pattern("Package.swift", ".git"),
-		settings = {},
-	}
-}
-
-lspconfig.sourcekit.setup({
-	capabilities = capabilities,
-})
