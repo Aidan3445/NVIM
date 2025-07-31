@@ -10,16 +10,13 @@ return {
       { 'BurntSushi/ripgrep' },
     }
   },
-  -- { 'neovim/nvim-lspconfig' },
   { 'mason-org/mason.nvim',       opts = {} },
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {},
     dependencies = {
       { 'mason-org/mason.nvim', opts = {} },
-      {
-        'neovim/nvim-lspconfig'
-      }
+      { 'neovim/nvim-lspconfig' }
     }
   },
   {
@@ -43,11 +40,11 @@ return {
     branch = 'v3.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'nvim-tree/nvim-web-devicons',   -- not strictly required, but recommended
       'MunifTanjim/nui.nvim',
       { '3rd/image.nvim', opts = {} }, -- Optional image support in preview window: See `# Preview Mode` for more information
     },
-    lazy = false,                   -- neo-tree will lazily load itself
+    lazy = false,                      -- neo-tree will lazily load itself
     opts = {
       -- fill any relevant options here
     },
@@ -68,8 +65,5 @@ return {
   {
     "stevearc/conform.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("config.conform").setup()
-    end,
   },
 }
