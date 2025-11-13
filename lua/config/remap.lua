@@ -33,3 +33,7 @@ vim.keymap.set("n", "<localleader>md", ":MoltenDelete<CR>", { desc = "delete Mol
 
 -- if you work with html outputs:
 vim.keymap.set("n", "<localleader>mx", ":MoltenOpenInBrowser<CR>", { desc = "open output in browser", silent = true })
+
+vim.keymap.set("n", "<C-a>", "ggVG", { desc = "select all" })
+
+vim.keymap.set("n", "<leader>pwd", ":let @+ = expand('%:p')<CR>", { desc = "copy pwd to clipboard" })

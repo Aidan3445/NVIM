@@ -1,19 +1,25 @@
 require('mason').setup()
 require('mason-lspconfig').setup()
 
-local lspconfig = require('lspconfig')
-lspconfig.sourcekit.setup {
-  capabilities = {
-    workspace = {
-      didChangeWatchedFiles = {
-        dynamicRegistration = true,
+vim.lsp.config["sourcekit"] = {
+  default_config = {
+    cmd = {
+      'xcrun',
+      '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp',
+    },
+    filetypes = { "swift", "objective-c", "objective-cpp" },
+    root_dir = vim.fs.dirname(vim.fs.find({ '.git' }, { upward = true })[1]),
+    capabilities = {
+      workspace = {
+        didChangeWatchedFiles = {
+          dynamicRegistration = true,
+        },
       },
     },
   },
-  cmd = {
-    'xcrun', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp',
-  },
 }
+
+vim.lsp.start(vim.lsp.config.sourcekit)
 
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('lua_ls')
@@ -60,10 +66,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
       local ft = vim.bo.filetype
       if ft == "swift" or ft == "objective-c" or ft == "objective-cpp" then
         -- Use conform for Swift / Obj-C
-        require("conform").format({ async = true, lsp_fallback = true })
+        require("conform").format({ async = false, lsp_fallback = true })
       else
         -- Use LSP for other languages
-        vim.lsp.buf.format({ async = true })
+        vim.lsp.buf.format({ async = false })
       end
       -- Save the file after formatting
       vim.cmd('w')
