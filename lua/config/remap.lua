@@ -35,5 +35,7 @@ vim.keymap.set("n", "<localleader>md", ":MoltenDelete<CR>", { desc = "delete Mol
 vim.keymap.set("n", "<localleader>mx", ":MoltenOpenInBrowser<CR>", { desc = "open output in browser", silent = true })
 
 vim.keymap.set("n", "<C-a>", "ggVG", { desc = "select all" })
+-- change increment number to <C-c>
+vim.keymap.set("n", "<C-c>", "<C-a>", { desc = "increment number" })
 
 vim.keymap.set("n", "<leader>pwd", ":let @+ = expand('%:p')<CR>", { desc = "copy pwd to clipboard" })
