@@ -26,6 +26,17 @@ vim.lsp.enable('lua_ls')
 vim.lsp.enable('eslint')
 vim.lsp.enable('tailwindcss')
 
+-- Pyright .venv support
+vim.lsp.config('pyright', {
+  before_init = function(_, config)
+    local venv_python = config.root_dir and (config.root_dir .. '/.venv/bin/python')
+    if venv_python and vim.uv.fs_stat(venv_python) then
+      config.settings.python = vim.tbl_deep_extend('force', config.settings.python or {},
+        { pythonPath = venv_python })
+    end
+  end,
+})
+
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 vim.lsp.config('*', {
   capabilities = capabilities,
@@ -52,11 +63,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
     map('<leader>gi', tele.lsp_implementations, 'Goto Impl')
     map('<leader>gt', tele.lsp_type_definitions, 'Goto Type')
 
-    map('<leader>vca', vim.lsp.buf.code_action, 'code action')
+    map('<leader>vca', function()
+      vim.lsp.buf.code_action({
+        filter = function(action) return not action.disabled end,
+      })
+    end, 'code action')
     map('<leader>vrn', vim.lsp.buf.rename, 'rename')
     vim.keymap.set('v',
       '<leader>vca',
-      vim.lsp.buf.code_action, { buffer = ev.buf, desc = 'Lsp: code_action' })
+      function()
+        vim.lsp.buf.code_action({
+          filter = function(action) return not action.disabled end,
+        })
+      end, { buffer = ev.buf, desc = 'Lsp: code_action' })
 
     map('K', function() vim.lsp.buf.hover({ border = 'rounded' }) end, 'hover')
     map('<leader>k', function() vim.lsp.buf.signature_help({ border = 'rounded' }) end, 'signature help')
