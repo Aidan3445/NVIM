@@ -279,6 +279,23 @@ require("neo-tree").setup({
   },
   event_handlers = {
     {
+      -- Speed: neo-tree runs `git status --ignored=traditional`, which walks every
+      -- ignored dir (node_modules, .venv, build/) and costs ~15x a plain status.
+      -- `matching` still reports ignored dirs, but without descending into them.
+      event = "before_git_status",
+      -- git rejects `matching` with `--untracked-files=no` (neo-tree's quick first pass),
+      -- so that pass skips ignored files entirely; the ls-files job and full pass cover them.
+      handler = function(args)
+        local sa = args.status_args
+        local mode = vim.tbl_contains(sa, "--untracked-files=no") and "--ignored=no" or "--ignored=matching"
+        for i, a in ipairs(sa) do
+          if a == "--ignored=traditional" then
+            sa[i] = mode
+          end
+        end
+      end,
+    },
+    {
       event = "neo_tree_buffer_enter",
       handler = function(arg)
         vim.cmd [[

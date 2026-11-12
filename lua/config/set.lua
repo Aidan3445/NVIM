@@ -29,7 +29,8 @@ vim.opt.isfname:append("@-@")
 vim.g.netrw_altv = true
 vim.g.netrw_winsize = 80
 
-vim.opt.updatetime = 50
+-- 50 made gitgutter spawn git on nearly every typing pause (CursorHold/CursorHoldI)
+vim.opt.updatetime = 250
 
 vim.opt.colorcolumn = "100"
 

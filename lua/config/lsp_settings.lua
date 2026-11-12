@@ -1,25 +1,19 @@
 require('mason').setup()
 require('mason-lspconfig').setup()
 
-vim.lsp.config["sourcekit"] = {
-  default_config = {
-    cmd = {
-      'xcrun',
-      '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp',
-    },
-    filetypes = { "swift", "objective-c", "objective-cpp" },
-    root_dir = vim.fs.dirname(vim.fs.find({ '.git' }, { upward = true })[1]),
-    capabilities = {
-      workspace = {
-        didChangeWatchedFiles = {
-          dynamicRegistration = true,
-        },
-      },
-    },
-  },
-}
+-- Only start sourcekit for Swift/Obj-C buffers (root_dir + capabilities come from
+-- nvim-lspconfig's lsp/sourcekit.lua). Previously it was started for every session.
+vim.lsp.config('sourcekit', {
+  cmd = { 'xcrun', 'sourcekit-lsp' },
+  filetypes = { 'swift', 'objc', 'objcpp' },
+})
+vim.lsp.enable('sourcekit')
 
-vim.lsp.start(vim.lsp.config.sourcekit)
+-- harper (grammar checker) is auto-enabled by mason-lspconfig for ~every filetype;
+-- keep it to prose so it isn't re-linting every code buffer.
+vim.lsp.config('harper_ls', {
+  filetypes = { 'markdown', 'text', 'gitcommit' },
+})
 
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('lua_ls')
@@ -85,7 +79,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       local ft = vim.bo.filetype
       if ft == "swift" or ft == "objective-c" or ft == "objective-cpp" then
         -- Use conform for Swift / Obj-C
-        require("conform").format({ async = false, lsp_fallback = true })
+        require("config.conform").format({ async = false, lsp_fallback = true })
       else
         -- Use LSP for other languages
         vim.lsp.buf.format({ async = false })
