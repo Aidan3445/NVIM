@@ -77,9 +77,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     vim.keymap.set('n', '<leader>S', function()
       local ft = vim.bo.filetype
-      if ft == "swift" or ft == "objective-c" or ft == "objective-cpp" then
+      if ft == "swift" or ft == "objc" or ft == "objcpp" then
         -- Use conform for Swift / Obj-C
-        require("config.conform").format({ async = false, lsp_fallback = true })
+        ---@diagnostic disable-next-line: different-requires
+        require("conform").format({ async = false, lsp_fallback = true })
       else
         -- Use LSP for other languages
         vim.lsp.buf.format({ async = false })
